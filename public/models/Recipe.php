@@ -45,15 +45,22 @@ class Recipe implements InterRecipe
     public function edit()
     {
     }
+
     public function delete()
     {
-        $id = $_GET["id"];
-
         $arrRecipes = $this->load();
+        $id = $_GET["id"];
+        $deleteIdx = -1;
 
-        foreach ($arrRecipes as $recipe) {
-            if ($id == $recipe["id"]) {
+        foreach ($arrRecipes as $idx => $recipe) {
+            if ($recipe["id"] == $id) {
+                $deleteIdx = $idx;
+                break;
             }
+        }
+
+        if ($deleteIdx != -1) {
+            unset($arrRecipes[$deleteIdx]);
         }
     }
 }
