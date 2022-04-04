@@ -42,14 +42,24 @@ class Recipe implements InterRecipe
 
         file_put_contents(self::JSON . "/" . $this->jsonFile, $strJson);
     }
-    public function edit()
-    {
-    }
 
-    public function delete()
+
+    public function edit($id, $title, $description)
     {
         $arrRecipes = $this->load();
-        $id = $_GET["id"];
+
+        foreach ($arrRecipes as $recipe) {
+            if ($recipe["id"] == $id) {
+                $recipe["title"] = $title;
+                $recipe["description"] = $description;
+            }
+        }
+    }
+
+
+    public function delete($id)
+    {
+        $arrRecipes = $this->load();
         $deleteIdx = -1;
 
         foreach ($arrRecipes as $idx => $recipe) {

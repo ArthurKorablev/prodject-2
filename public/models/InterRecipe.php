@@ -5,6 +5,6 @@ namespace models;
 interface InterRecipe
 {
     public function create();
-    public function edit();
-    public function delete();
+    public function edit($id, $title, $description);
+    public function delete($id);
 }
