@@ -3,13 +3,13 @@
 namespace models;
 
 
-class Recipe implements InterRecipe
+class Recipe
 {
 
     private $id;
     private $title;
     private $description;
-    private $jsonFile = "recipes.json";
+    const JSFILE = "recipes.json";
     const JSON = "JSON";
 
     function __construct($title, $description)
@@ -19,18 +19,18 @@ class Recipe implements InterRecipe
         $this->description = $description;
     }
 
-    public function load()
+    static function load()
     {
         $strJson = '[]';
-        if (file_exists(self::JSON . "/" . $this->jsonFile)) {
-            $strJson = file_get_contents(self::JSON . "/" . $this->jsonFile);
+        if (file_exists(self::JSON . "/" . self::JSFILE)) {
+            $strJson = file_get_contents(self::JSON . "/" . self::JSFILE);
         }
         return json_decode($strJson, true);
     }
 
     public function create()
     {
-        $arrRecipes = $this->load();
+        $arrRecipes = self::load();
 
         $arrRecipes[] = ["id" => $this->id, "title" => $this->title, "description" => $this->description];
 
@@ -40,26 +40,33 @@ class Recipe implements InterRecipe
             mkdir(self::JSON);
         }
 
-        file_put_contents(self::JSON . "/" . $this->jsonFile, $strJson);
+        file_put_contents(self::JSON . "/" . self::JSFILE, $strJson);
     }
 
 
-    public function edit($id, $title, $description)
+    static function edit($id, $title, $description)
     {
-        $arrRecipes = $this->load();
+        $arrRecipes = self::load();
 
-        foreach ($arrRecipes as $recipe) {
+        foreach ($arrRecipes as &$recipe) {
             if ($recipe["id"] == $id) {
                 $recipe["title"] = $title;
                 $recipe["description"] = $description;
             }
         }
+        $strJson = json_encode($arrRecipes);
+
+        if (!file_exists(self::JSON)) {
+            mkdir(self::JSON);
+        }
+
+        file_put_contents(self::JSON . "/" . self::JSFILE, $strJson);
     }
 
 
-    public function delete($id)
+    static function delete($id)
     {
-        $arrRecipes = $this->load();
+        $arrRecipes = self::load();
         $deleteIdx = -1;
 
         foreach ($arrRecipes as $idx => $recipe) {
