@@ -10,6 +10,7 @@ spl_autoload_register(function ($className) {
 });
 
 $id = $_GET["id"] ?? 0;
+$method = $_GET["method"] ?? "";
 
 $recipes = Recipe::load();
 $recipeForm = [];
@@ -19,6 +20,11 @@ if ($id != 0) {
             $recipeForm = $recipe;
         }
     }
+}
+
+if ($method == "delete" && $id != 0) {
+    Recipe::delete($id);
+    header("location: form.php");
 }
 
 if (count($_POST) > 0) {
@@ -49,10 +55,11 @@ if (count($_POST) > 0) {
     <?php
     foreach ($recipes as $recipe) { ?>
 
-        <div style="width: 150px; border: 1px solid black; text-align: center; margin-bottom: 20px">
+        <div style="width: 120px; border: 1px solid black; text-align: center; margin-bottom: 20px; padding: 5px">
             <h3><?= $recipe["title"] ?></h3>
             <p><?= $recipe["description"] ?></p>
             <a href="?id=<?= $recipe["id"] ?>">edit</a>
+            <a href="?id=<?= $recipe["id"] ?>&method=delete">delete</a>
         </div>
 
     <?php } ?>

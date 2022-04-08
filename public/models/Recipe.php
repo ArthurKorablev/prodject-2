@@ -77,7 +77,14 @@ class Recipe
         }
 
         if ($deleteIdx != -1) {
-            unset($arrRecipes[$deleteIdx]);
+            array_splice($arrRecipes, $idx, 1);
         }
+        $strJson = json_encode($arrRecipes);
+
+        if (!file_exists(self::JSON)) {
+            mkdir(self::JSON);
+        }
+
+        file_put_contents(self::JSON . "/" . self::JSFILE, $strJson);
     }
 }
